@@ -1,0 +1,46 @@
+<?php
+/**
+ * Recent posts page for homepage
+ *
+ * 
+ *<Author: Alayna Browder Wilson>
+ */
+?>
+<?php if (your_front_page()) : ?>
+    <?php
+    $recent_articles_title = (get_field('recent_articles_title', your_acf_page_id(), false) ?: __('Recent Articles', 'your-url'));
+    $recent_articles_ids   = get_field('recent_articles', your_acf_page_id(), false);
+    ?>
+    <?php if ($recent_articles_ids) : ?>
+        <?php
+        $recent_articles_query = new WP_Query([
+            'post__in'       => $recent_articles_ids,
+            'posts_per_page' => count($recent_articles_ids)
+        ]);
+        ?>
+        <section class="recent-posts">
+            <div class="section section--large spacing-tiny-top spacing-small-bottom">
+                <div class="txt-center spacing-tiny-bottom">
+                    <h2>
+                        <?php echo $recent_articles_title; ?>
+                    </h2>
+                </div>
+                <div class="grid grid--spaced grid--spaced-6 grid--spaced-tb2-2 grid--spaced-m-1">
+                    <?php while ($recent_articles_query->have_posts()) : ?>
+                        <?php
+                        $recent_articles_query->the_post();
+                        ?>
+                        <div class="grid__col grid__col--6">
+                            <?php echo your_post_preview(); ?>
+                        </div>
+                    <?php endwhile; ?>
+
+
+
+
+                    <?php wp_reset_postdata(); ?>
+                </div>
+            </div>
+        </section>
+    <?php endif; ?>
+<?php endif; ?>
